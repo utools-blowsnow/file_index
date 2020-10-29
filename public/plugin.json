@@ -1,0 +1,18 @@
+{
+  "pluginName": "文件夹索引",
+  "description": "文件夹索引",
+  "author": "blowsnow",
+  "main": "index.html",
+  "preload": "preload.js",
+  "logo": "logo.png",
+  "version": "1.4.0",
+  "features": [
+    {
+      "code": "open",
+      "explain": "文件夹索引",
+      "cmds":[
+        "文件夹索引"
+      ]
+    }
+  ]
+}
