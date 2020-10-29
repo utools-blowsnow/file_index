@@ -28,7 +28,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="seeFileIndexes(scope.row)">查看索引({{scope.row.list.length}})</el-button>
           <el-button type="text" size="small" @click="reScanDir(scope.row)">重建索引</el-button>
-          <el-button type="text" size="small" @click="delItem(scope.$index)">删除</el-button>
+          <el-button type="text" size="small" @click="delItem(scope.$index)" style="color: red;">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -38,7 +38,7 @@
       <el-table :data="activeItem.list">
         <el-table-column property="name" label="名称" min-width="100">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.name" @change="changeFileNameAlias($event,scope.row.path)"></el-input>
+            <el-input v-model="scope.row.name" size="mini" @change="changeFileNameAlias($event,scope.row.path)"></el-input>
           </template>
         </el-table-column>
         <el-table-column property="path" label="路径" min-width="200"></el-table-column>
@@ -64,14 +64,25 @@ export default {
     utools.onPluginReady(()=>{
       this.init();
     })
-  },
-  computed:{
+
+    utools.onPluginEnter(({code, type, payload, optional}) => {
+      console.log('用户进入插件', code, type, payload,optional)
+      console.log(utils.file.existsSync(code));
+      if (type === "text"){
+        if (window.utils.file.existsSync(code)){
+          utools.shellOpenPath(code)
+          utools.outPlugin()
+        }
+      }else if (type === "files" && payload.length > 0){
+        this.addItem(payload[0].path);
+      }
+    })
   },
   methods:{
     /**
      * 初始化数据
      */
-    init(){
+    async init(){
       if (window.db('items')){ //文件夹列表
         this.items = window.db('items');
       }
@@ -79,7 +90,7 @@ export default {
         this.filters = window.db('filters');
       }
       //重建目录文件索引
-      this.reScanDirs();
+      await this.reScanDirs();
     },
     /**
      * 打开选择弹窗
@@ -108,7 +119,7 @@ export default {
      * 扫描目录
      */
     scanDir(dir){
-      var list = utils.scanDirFiles(dir);
+      var list = utils.scanDirFiles(dir,['node_modules','.git']);
 
       var nlist = [];
       for(let item of list){
@@ -124,6 +135,16 @@ export default {
      * 添加项目
      */
     addItem(dir){
+      let flag = false;
+      for(let item of this.items){
+          if (item.path === dir) {
+            flag = true;
+            break;
+          }
+      }
+      if (flag) {
+        return;
+      }
       console.log('addItem',dir);
       let item = {
         name: this.getDirName(dir),
@@ -175,29 +196,39 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       });
 
-      setTimeout(()=>{
-        let list = this.scanDir(item.path);
+      console.log('reScanDir',item);
 
-        this.setItemFileFeatures(item.path,list);
+      return new Promise(resolve => {
+        setTimeout(()=>{
 
-        let nlist = [];
-        for(let path of list){
-          nlist.push({
-            name: this.getFileNameAlias(path),
-            path: path,
-          })
-        }
-        item.list = nlist;
+          let list = this.scanDir(item.path);
 
-        loading.close();
-      },100)
+          this.setItemFileFeatures(item.path,list);
+
+          let nlist = [];
+          for(let path of list){
+            nlist.push({
+              name: this.getFileNameAlias(path),
+              path: path,
+            })
+          }
+          item.list = nlist;
+
+
+          loading.close();
+
+
+          resolve();
+        },100)
+      })
+
     },
     /**
      * 重建索引
      */
-    reScanDirs(){
+    async reScanDirs(){
       for(let item of this.items){
-          this.reScanDir(item);
+          await this.reScanDir(item);
       }
     },
 

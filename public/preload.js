@@ -56,7 +56,7 @@ window.utils = {
         exec('xdg-open', [url]);
     }
   },
-    scanDirFiles: (dir)=>{
+  scanDirFiles: (dir,excludes=[])=>{
       var that = this;
         var list = [] , files = fs.readdirSync(dir);
         files.forEach((filename) =>{
@@ -71,10 +71,19 @@ window.utils = {
             if(stats.isFile()){
                 list.push(filepath);
             }else if(stats.isDirectory()){
-                list.push(...utils.scanDirFiles(filepath));
+                for(let exclude of excludes){
+                    let regexp = new RegExp(exclude,"i")
+                    if (regexp.test(filepath)) return;
+                }
+                list.push(...utils.scanDirFiles(filepath,excludes));
             }
         });
         return list
+    },
+    file:{
+        existsSync(path){
+            return fs.existsSync(path);
+        }
     }
 }
 

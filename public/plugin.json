@@ -1,17 +1,24 @@
 {
-  "pluginName": "文件夹索引",
-  "description": "文件夹索引",
+  "pluginName": "文件索引",
+  "description": "文件索引",
   "author": "blowsnow",
   "main": "index.html",
   "preload": "preload.js",
   "logo": "logo.png",
-  "version": "1.4.0",
+  "version": "1.0.0",
   "features": [
     {
       "code": "open",
-      "explain": "文件夹索引",
+      "explain": "文件索引",
       "cmds":[
-        "文件夹索引"
+        "文件索引",
+        {
+          "type": "files",
+          "label": "文件索引",
+          "fileType": "directory",
+          "minLength": 1,
+          "maxLength": 1
+        }
       ]
     }
   ]
