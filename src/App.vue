@@ -54,7 +54,7 @@ export default {
   data(){
     return {
       items: [],
-      filters: 'exe|lnk',
+      filters: '\.exe|\.lnk',
 
       dialogTableVisible: false,
       activeItem: {}
@@ -123,7 +123,7 @@ export default {
 
       var nlist = [];
       for(let item of list){
-        let type = this.getFileType(item);
+        let type = this.getFileAllName(item);
         let regexp = new RegExp(this.filters,"i")
         if (!regexp.test(type)) continue;
         nlist.push(item);
@@ -270,6 +270,13 @@ export default {
       var filename=file;
       var index1 = filename.lastIndexOf("/") + 1 || filename.lastIndexOf("\\") + 1;
       var index2=filename.lastIndexOf(".");
+      var type=filename.substring(index1,index2);
+      return type;
+    },
+    getFileAllName(file){
+      var filename=file;
+      var index1 = filename.lastIndexOf("/") + 1 || filename.lastIndexOf("\\") + 1;
+      var index2=filename.length;
       var type=filename.substring(index1,index2);
       return type;
     },
