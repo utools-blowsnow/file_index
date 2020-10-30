@@ -1,19 +1,13 @@
-# example2
+# 文件索引
+> 文件夹索引自定义文件类型
 
-## Project setup
-```
-npm install
-```
+- 文件夹内指定文件 utools 快捷访问
+- 支持多文件别名（请在索引列表中手动修改）
+- 支持手动重建索引
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+# 更新
+## 1.1.0
+- 修改正则匹配为匹配文件名而不是文件类型
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# 开源
+https://github.com/utools-blowsnow/file_index

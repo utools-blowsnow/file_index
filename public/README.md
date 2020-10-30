@@ -8,3 +8,6 @@
 # 更新
 ## 1.1.0
 - 修改正则匹配为匹配文件名而不是文件类型
+
+# 开源
+https://github.com/utools-blowsnow/file_index
