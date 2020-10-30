@@ -4,7 +4,7 @@
       <el-button type="primary" size="mini" icon="el-icon-plus" @click="openSelectDialog">新增</el-button>
       <el-button type="primary" size="mini" @click="reScanDirs">重建索引</el-button>
       <div style="float: right;">
-        支持的文件后缀(正则)：<el-input size="mini" v-model="filters" style="width: 200px;" @change="saveFilters"></el-input>
+        支持的文件名(正则)：<el-input size="mini" v-model="filters" style="width: 200px;" @change="saveFilters"></el-input>
       </div>
     </div>
     <el-table
