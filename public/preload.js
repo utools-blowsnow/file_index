@@ -56,26 +56,29 @@ window.utils = {
         exec('xdg-open', [url]);
     }
   },
-  scanDirFiles: (dir,excludes=[])=>{
-      var that = this;
-        var list = [] , files = fs.readdirSync(dir);
-        files.forEach((filename) =>{
-            let filepath = path.join(dir,filename);
+    scanDirFiles: (dir, excludes = []) => {
+        if (!fs.existsSync(dir)) {
+            console.log(dir + " not exist!")
+            return [];
+        }
+        var list = [], files = fs.readdirSync(dir);
+        files.forEach((filename) => {
+            let filepath = path.join(dir, filename);
             try {
                 var stats = fs.statSync(filepath);
-            }catch (e){
+            } catch (e) {
                 console.log(e);
                 return;
             }
             //是文件
-            if(stats.isFile()){
+            if (stats.isFile()) {
                 list.push(filepath);
-            }else if(stats.isDirectory()){
-                for(let exclude of excludes){
-                    let regexp = new RegExp(exclude,"i")
+            } else if (stats.isDirectory()) {
+                for (let exclude of excludes) {
+                    let regexp = new RegExp(exclude, "i")
                     if (regexp.test(filepath)) return;
                 }
-                list.push(...utils.scanDirFiles(filepath,excludes));
+                list.push(...utils.scanDirFiles(filepath, excludes));
             }
         });
         return list
